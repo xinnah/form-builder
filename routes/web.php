@@ -16,5 +16,12 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::group(['middleware' => ['auth']], function(){
+	Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/home', 'HomeController@index')->name('home');
+	// customer info
+	Route::resource('customer-info', 'CustomersInfoController');
+
+	// form status update
+	Route::post('/forms-staus-update', 'HomeController@statusUpdate');
+});

@@ -32,7 +32,7 @@
                                     <th>Name</th>
                                     <th class="ten">Visibility</th>
                                     <th class="fifteen">Allows Edit?</th>
-                                    {{-- <th class="ten">Submissions</th> --}}
+                                    <th class="ten">Status</th>
                                     <th class="twenty-five">Actions</th>
                                 </tr>
                             </thead>
@@ -43,7 +43,19 @@
                                         <td>{{ $form->name }}</td>
                                         <td>{{ $form->visibility }}</td>
                                         <td>{{ $form->allowsEdit() ? 'YES' : 'NO' }}</td>
-                                        {{-- <td>{{ $form->submissions_count }}</td> --}}
+                                        <td>
+                                            @if($form->status == 1)
+                                                Active
+                                            @else
+                                            <form action="{{ url('forms-staus-update') }}" method="POST" id="statusFormForm_{{ $form->id }}" class="d-inline-block">
+                                                @csrf 
+                                                <input type="hidden" value="{{ $form->id }}" name="id">
+                                                <button type="submit" class="btn btn-danger btn-sm confirm-form" data-form="statusFormForm_{{ $form->id }}" data-message="Active form '{{ $form->name }}'?" title="Active form '{{ $form->name }}'">
+                                                    Inactive
+                                                </button>
+                                            </form>
+                                            @endif
+                                        </td>
                                         <td>
                                             <!-- <a href="{{ route('formbuilder::forms.submissions.index', $form) }}" class="btn btn-primary btn-sm" title="View submissions for form '{{ $form->name }}'">
                                                 <i class="fa fa-th-list"></i> Data
