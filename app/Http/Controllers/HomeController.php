@@ -30,6 +30,7 @@ class HomeController extends Controller
     public function statusUpdate(Request $request)
     {
         $input = $request->all();
+        DB::beginTransaction();
         try {
             $form = Form::findOrFail($input['id']);
             // all form are update status inactive
@@ -37,8 +38,10 @@ class HomeController extends Controller
 
             // select form set status active
             $form->update(['status' => 1]);
+            DB::commit();
             return back()->with('success', "Now '{$form->name}' Form is Active.");
         } catch (\Exception $e) {
+            DB::rollback();
             $bug = $e->getMessage();
             return back()->with('error', $bug);
         }
