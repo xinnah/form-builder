@@ -25,8 +25,13 @@
                             <div class="col-md-6">
                                 <div class="form-group {{ isset($info->required) && ($info->required == true) ? 'required': '' }}">
                                     <label for="{{ $info->name }}" class="col-form-label">{{ $info->label }}</label>
-
+                                    @if($info->type == 'text')
                                     <input id="{{ $info->name }}" type="{{ $info->subtype }}" class="{{ $info->className }}" name="{{ $info->name }}" value='{{ old("$info->name") }}' placeholder="{{ $info->placeholder }}" {{ isset($info->required) && ($info->required == true) ? 'required': '' }}>
+                                    @elseif($info->type == 'textarea')
+                                    <textarea rows="3" id="{{ $info->name }}" class="{{ $info->className }}" name="{{ $info->name }}" placeholder="{{ $info->placeholder }}" {{ isset($info->required) && ($info->required == true) ? 'required': '' }}>
+                                        
+                                    </textarea>
+                                    @endif
                                     <input type="hidden" name="data[]" value="{{ json_encode($info) }}">
 
                                 </div>

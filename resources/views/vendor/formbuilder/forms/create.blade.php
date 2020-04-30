@@ -79,6 +79,10 @@
                                     <i class="fa fa-info-circle"></i> 
                                     Click on or drag and drop components onto the main panel to build your form content.
                                 </div>
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fa fa-info-circle"></i> 
+                                    Now Only Text Field, Text Area are Available to Work in Customer info Form Create & Update.
+                                </div>
 
                                 <div id="fb-editor" class="fb-editor"></div>
                             </div>
