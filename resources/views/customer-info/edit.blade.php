@@ -9,15 +9,14 @@
                     <h5 class="card-title">
                         {{ $pageTitle ?? '' }}
 
-                        <a href="{{ route('customer-info.index') }}" class="btn btn-sm btn-primary float-md-right">
+                        <a href='{{ url("forms/$formId/customer-info") }}' class="btn btn-sm btn-primary float-md-right">
                             <i class="fa fa-arrow-left"></i> Back To Customer Info
                         </a>
                     </h5>
                 </div>
                 
-                <form action="{{ route('customer-info.update', $customerInfo->id) }}" method="POST" id="createFormForm">
-                    @csrf 
-                    @method('PUT')
+                <form action='{{ url("forms/$formId/customer-info/$customerInfo->id") }}' method="POST" id="createFormForm">
+                    @csrf
                     
                     <div class="card-body">
                         @include('notify.index')
@@ -25,15 +24,15 @@
                             @foreach(json_decode($customerInfo->value) as $key => $info)
                             <div class="col-md-6">
                                 <div class="form-group {{ isset($info->required) && ($info->required == true) ? 'required': '' }}">
-                                    <label for="{{ $info->name }}" class="col-form-label">{{ $info->label }}</label>
-                                    @if($info->type == 'text')
-                                    <input type="hidden" name="data[]" value="{{ json_encode($info) }}">
-                                    <input id="{{ $info->name }}" type="{{ $info->subtype }}" class="{{ $info->className }}" name="{{ $info->name }}" value='{{ $info->value }}' placeholder="{{ $info->placeholder }}" {{ isset($info->required) && ($info->required == true) ? 'required': '' }}>
+                                    <label for="{{ isset($info->name) ? $info->name : '' }}" class="col-form-label">{{ isset($info->label) ? $info->label : '' }}</label>
+                                    @if($info->type == 'text' || $info->type == 'date')
+                                    <input id="{{ isset($info->name) ? $info->name : '' }}" type="{{ isset($info->type) ? $info->type : '' }}" class="{{ isset($info->className) ? $info->className : '' }}" name="{{ isset($info->name) ? $info->name : '' }}" value="{{ $info->value }}" placeholder="{{ isset($info->placeholder) ? $info->placeholder: '' }}" {{ isset($info->required) && ($info->required == true) ? 'required': '' }}>
                                     @elseif($info->type == 'textarea')
-                                    <input type="hidden" name="data[]" value="{{ json_encode($info) }}">
-                                    <textarea rows="3" id="{{ $info->name }}" class="{{ $info->className }}" name="{{ $info->name }}" placeholder="{{ $info->placeholder }}" {{ isset($info->required) && ($info->required == true) ? 'required': '' }}><?php echo $info->value; ?></textarea>
+                                    <textarea rows="3" id="{{ isset($info->name) ? $info->name : '' }}" class="{{ isset($info->className) ? $info->className : '' }}" name="{{ isset($info->name) ? $info->name : '' }}" placeholder="{{ isset($info->placeholder) ? $info->placeholder : '' }}" {{ isset($info->required) && ($info->required == true) ? 'required': '' }}>@php echo $info->value; @endphp
+                                        
+                                    </textarea>
                                     @endif
-                                    
+                                    <input type="hidden" name="data[]" value="{{ json_encode($info) }}">
 
                                 </div>
                             </div>

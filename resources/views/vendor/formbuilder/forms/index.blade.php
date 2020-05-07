@@ -44,22 +44,20 @@
                                         <td>{{ $form->visibility }}</td>
                                         <td>{{ $form->allowsEdit() ? 'YES' : 'NO' }}</td>
                                         <td>
-                                            @if($form->status == 1)
-                                                Active
-                                            @else
                                             <form action="{{ url('forms-staus-update') }}" method="POST" id="statusFormForm_{{ $form->id }}" class="d-inline-block">
                                                 @csrf 
                                                 <input type="hidden" value="{{ $form->id }}" name="id">
-                                                <button type="submit" class="btn btn-danger btn-sm confirm-form" data-form="statusFormForm_{{ $form->id }}" data-message="Active form '{{ $form->name }}'?" title="Active form '{{ $form->name }}'">
-                                                    Inactive
+                                                
+                                                <button type="submit" class="btn {{ ($form->status == 1) ? 'btn-danger' : 'btn-success' }} btn-sm confirm-form" data-form="statusFormForm_{{ $form->id }}" data-message="Status Change form '{{ $form->name }}'?" title="This Form {{ $form->name }} is now {{ ($form->status == 1) ? 'Active' : 'Inactive' }}">
+                                                    {{ ($form->status == 1) ? 'Inactive' : 'Active' }}
                                                 </button>
                                             </form>
-                                            @endif
+                                            
                                         </td>
                                         <td>
-                                            <!-- <a href="{{ route('formbuilder::forms.submissions.index', $form) }}" class="btn btn-primary btn-sm" title="View submissions for form '{{ $form->name }}'">
-                                                <i class="fa fa-th-list"></i> Data
-                                            </a> -->
+                                            <a href='{{ url("forms/$form->id/customer-info") }}' class="btn btn-success btn-sm" title="View Customer Info List for form '{{ $form->name }}'">
+                                                <i class="fa fa-th-list"></i> Customer Info
+                                            </a>
                                             <a href="{{ route('formbuilder::forms.show', $form) }}" class="btn btn-primary btn-sm" title="Preview form '{{ $form->name }}'">
                                                 <i class="fa fa-eye"></i> 
                                             </a> 

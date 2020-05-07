@@ -19,9 +19,21 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function(){
 	Route::get('/home', 'HomeController@index')->name('home');
 
-	// customer info
-	Route::resource('customer-info', 'CustomersInfoController');
-
 	// form status update
 	Route::post('/forms-staus-update', 'HomeController@statusUpdate');
+
+	// forms wise customer info list
+	Route::get('forms/active-list', 'HomeController@activeForms');
+	// Route::get('forms-customer-info/{id}', 'HomeController@customerInfo');
+
+	// customer info
+	Route::group(['prefix' => 'forms/{formId}/'], function($id) {
+		Route::get('/customer-info', 'CustomersInfoController@index');
+		Route::get('/customer-info/create', 'CustomersInfoController@create');
+		Route::get('/customer-info/{id}', 'CustomersInfoController@show');
+		Route::get('/customer-info/{id}/edit', 'CustomersInfoController@edit');
+		Route::post('/customer-info', 'CustomersInfoController@store');
+		Route::post('/customer-info/{id}', 'CustomersInfoController@update');
+		Route::post('/customer-info/{id}/delete', 'CustomersInfoController@destroy');
+	});
 });

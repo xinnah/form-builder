@@ -9,7 +9,7 @@
                     <h5 class="card-title">
                         {{ $pageTitle ?? '' }}
 
-                        <a href="{{ route('customer-info.index') }}" class="btn btn-sm btn-primary float-md-right">
+                        <a href='{{ url("/forms/$formId/customer-info") }}' class="btn btn-sm btn-primary float-md-right">
                             <i class="fa fa-arrow-left"></i> Back To Customer Info
                         </a>
                     </h5>

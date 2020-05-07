@@ -8,6 +8,6 @@ class CustomerInfo extends Model
 {
     protected $table = 'customer_info';
     protected $fillable = [
-        'user_id', 'value',
+        'form_id', 'user_id', 'value',
     ];
 }

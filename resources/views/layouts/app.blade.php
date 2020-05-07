@@ -39,7 +39,7 @@
                             <a class="nav-link" href="{{ url('form-builder/forms') }}">{{ __('Forms') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('customer-info') }}">{{ __('Customer Info') }}</a>
+                            <a class="nav-link" href="{{ url('forms/active-list') }}">{{ __('Active Forms Info') }}</a>
                         </li>
                         @endauth
                     </ul>

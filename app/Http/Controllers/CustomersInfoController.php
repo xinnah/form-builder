@@ -13,12 +13,16 @@ class CustomersInfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($formId)
     {
         try {
-            $pageTitle = 'List of Customer Info';
-            $getCustomerInfo = CustomerInfo::paginate(10);
-            return view('customer-info.index', compact('pageTitle', 'getCustomerInfo'));
+            $form = Form::findOrFail($formId);
+            if($form != ''){
+                $pageTitle = 'List of Customer Info';
+                $getCustomerInfo = CustomerInfo::where('form_id', $formId)->paginate(10);
+                return view('customer-info.index', compact('pageTitle', 'getCustomerInfo', 'form'));
+            }
+            return redirect('form-builder/forms')->with('error', 'No Form Found!');
         } catch (\Exception $e) {
             $bug = $e->getMessage();
             return back()->with('error', $bug);
@@ -31,11 +35,11 @@ class CustomersInfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($formId)
     {
         try {
             $pageTitle = 'Crate New Customer Info';
-            $form = Form::where('status', 1)->first();
+            $form = Form::where('id', $formId)->first();
             if($form == ''){
                 return redirect('/customer-info')->with('error', 'First Create Form / Select Any One Active in a Forms');
             }
@@ -53,7 +57,7 @@ class CustomersInfoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $formId)
     {
         $user = $request->user();
         $value = array();
@@ -71,8 +75,9 @@ class CustomersInfoController extends Controller
 
             $data['value'] = json_encode($value);
             $data['user_id'] = $user->id;
+            $data['form_id'] = $input['form_id'];
             CustomerInfo::create($data);
-            return redirect('customer-info')->with('success', 'Successfully Create Customer Info');
+            return redirect("/forms/$formId/customer-info")->with('success', 'Successfully Create Customer Info');
         } catch (\Exception $e) {
             $bug = $e->getMessage();
             return back()->with('error', $bug);
@@ -85,12 +90,12 @@ class CustomersInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($formId, $id)
     {
         try {
             $pageTitle = 'Show Customer Info';
             $customerInfo = CustomerInfo::findOrFail($id);
-            return view('customer-info.show', compact('pageTitle', 'customerInfo'));
+            return view('customer-info.show', compact('pageTitle', 'customerInfo', 'formId'));
         } catch (\Exception $e) {
             $bug = $e->getMessage();
             return back()->with('error', $bug);
@@ -103,12 +108,12 @@ class CustomersInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($formId, $id)
     {
         try {
             $pageTitle = 'Edit Customer Info';
             $customerInfo = CustomerInfo::findOrFail($id);
-            return view('customer-info.edit', compact('pageTitle', 'customerInfo'));
+            return view('customer-info.edit', compact('pageTitle', 'customerInfo', 'formId'));
         } catch (\Exception $e) {
             $bug = $e->getMessage();
             return back()->with('error', $bug);
@@ -122,7 +127,7 @@ class CustomersInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $formId, $id)
     {
         $customerInfo = CustomerInfo::findOrFail($id);
         $user = $request->user();
@@ -143,7 +148,7 @@ class CustomersInfoController extends Controller
             $data['value'] = json_encode($value);
             $data['user_id'] = $user->id;
             $customerInfo->update($data);
-            return redirect('customer-info')->with('success', 'Successfully Updated Customer Info');
+            return redirect("/forms/$formId/customer-info")->with('success', 'Successfully Updated Customer Info');
         } catch (\Exception $e) {
             $bug = $e->getMessage();
             return back()->with('error', $bug);
@@ -156,12 +161,12 @@ class CustomersInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($formId, $id)
     {
         try {
             $customerInfo = CustomerInfo::findOrFail($id);
             $customerInfo->delete();
-            return redirect('customer-info')->with('success', 'Successfully Deleted Customer Info');
+            return redirect("/forms/$formId/customer-info")->with('success', 'Successfully Deleted Customer Info');
         } catch (\Exception $e) {
             $bug = $e->getMessage();
             return back()->with('error', $bug);

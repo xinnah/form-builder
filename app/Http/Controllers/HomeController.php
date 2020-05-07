@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomerInfo;
+use DB;
 use Illuminate\Http\Request;
 use jazmy\FormBuilder\Models\Form;
-use DB;
 class HomeController extends Controller
 {
     /**
@@ -33,11 +34,13 @@ class HomeController extends Controller
         DB::beginTransaction();
         try {
             $form = Form::findOrFail($input['id']);
-            // all form are update status inactive
-            DB::table('forms')->update(['status' => 0]);
+            $status = 1;
+            if($form->status == 1){
+                $status = 0;
+            }
 
             // select form set status active
-            $form->update(['status' => 1]);
+            $form->update(['status' => $status]);
             DB::commit();
             return back()->with('success', "Now '{$form->name}' Form is Active.");
         } catch (\Exception $e) {
@@ -47,4 +50,26 @@ class HomeController extends Controller
         }
         return $input;
     }
+
+    public function activeForms()
+    {
+        $forms = Form::where('status', 1)->orderBy('id', 'desc')->get();
+        return view('active-forms-info.index', compact('forms'));
+    }
+
+    // public function customerInfo($id)
+    // {
+    //     try {
+    //         $form = Form::findOrFail($id);
+    //         if($form != ''){
+    //             $pageTitle = 'List of Customer Info';
+    //             $getCustomerInfo = CustomerInfo::where('form_id', $id)->paginate(10);
+    //             return view('customer-info.index', compact('pageTitle', 'getCustomerInfo', 'form'));
+    //         }
+    //         return redirect('form-builder/forms')->with('error', 'No Form Found!');
+    //     } catch (\Exception $e) {
+    //         $bug = $e->getMessage();
+    //         return back()->with('error', $bug);
+    //     }
+    // }
 }
